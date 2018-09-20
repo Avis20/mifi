@@ -1,3 +1,7 @@
 
+use strict;
+use warnings;
 
-print 1;
+my $a = 5;
+my $b;
+print( ++( $b = $a ) );
