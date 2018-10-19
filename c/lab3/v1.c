@@ -14,11 +14,11 @@ int main(){
 
     int arr[N], n, input_count;
     int pos[N], neg[N], count_pos, count_neg;
-    // int arr[5] = {-1,2,-3,4,-5}, input_count = 5;
+//    int arr[5] = {0,2,-3,4,-5}, input_count = 5;
 
     while (1){
-    input_count = input( arr, N );
-    if ( input_count <= 0 ) break;
+        input_count = input( arr, N );
+        if ( input_count <= 0 ) break;
         output(arr, input_count);
         sort(arr, input_count);
         count_pos = make(arr, pos, input_count, 1);
@@ -71,7 +71,7 @@ int make(int arr[], int arr2[], int count, int param){
     int i, count2 = 0;
 
     for(i = 0; i < count; i++){
-        if ( arr[i] > 0 == param){
+        if ( arr[i] != 0 && arr[i] > 0 == param ){
             arr2[count2++] = arr[i];
         }
     }
