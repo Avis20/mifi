@@ -7,6 +7,8 @@
 #define N 100
 
 void work(char *, char *);
+char *skipspace(char *);
+char *skipword(char *);
 
 int main(){
 //    char from[N], to[N];
@@ -22,12 +24,25 @@ int main(){
     return 0;
 }
 
+char *skipspace(char *str){
+    while ( *str == ' ' || *str == '\t' ) str++;
+    return str;
+}
+
+char *skipword(char *str){
+    while ( *str && *str != ' ' && *str != '\t' ) str++;
+    return str;
+}
+
 void work(char *from, char *to){
     int i, l;
+    char *next;
     strcpy(to, "");
-    
-    for ( i = 1; from += strspn(from, " \t"); i++ ){
-        printf("%s\n", from);
+
+    for ( i = 0; *( from = skipspace(from) ); i++ ){
+        str = from;
+        next = skipword(from);
+        printf("next = %s, from = %s\n", next, from);
         from += strcspn(from, " \t");
 //       if (i > 2) break;
     }
