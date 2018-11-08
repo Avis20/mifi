@@ -30,6 +30,6 @@ int main(){
 void work(char *from, char *to){
     int i, l;
     strcpy(to, "");
-    printf(strspn(from, "\t") );
+    printf("%d", strspn(from, "\t") );
 //    for ( i = 0; from *= strspn(from, "\t") )
 }
