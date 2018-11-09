@@ -31,10 +31,13 @@ void work2 (char *from, char *to){
     // for (i = 0; *( from += strspn(from, " \t") ); i++){
     while (*( from += strspn(from, " \t"))){
         for ( i = 0; i < strcspn(from, " \t"); i++ ){
+            b = 0;
+            /*
             for ( j = 1; j <= i; j++ ){
-                printf("%c", from[j]);
+                printf("-%c-", from[j]);
             }
-            // printf("-%c-", from[i]);
+            */
+            printf("-%c-", from[i]);
         }
         from += strcspn(from, " \t");
     }
