@@ -6,7 +6,7 @@
 */
 
 #include <stdio.h>
-#include <string.h>
+// #include <string.h>
 #define N 100
 
 char *skipspace(char *);
@@ -16,7 +16,7 @@ void work(char *, char *);
 int main(){
 //    char from[N], to[N];
     char to[N];
-    char from[] = "help me!";
+    char from[] = "help me!\0";
 //    char from[] = "test                            fdfdf           hg       sgh sf sq xx     x     f xsgf ddd", to[N];
     work(from, to);
     printf("Результат: %s\n", to);
@@ -32,30 +32,21 @@ int main(){
 }
 
 void work (char *from, char *to){
-    char *w[N];
-    int wl[N], i, lenght, j;
-    for (i = 0; *(from = skipspace(from)); i++){
-        printf("%s", from[i]);
-//        w[i] = from;
-//        wl[i] = skipword(from)-from;
-    }
-
- //   printf("%d", i);
-/*    
-    lenght = i;
-    for ( i = 0; i < lenght; i++ )
-        for ( j = 0; j < wl[i]; j++ )
-            printf("%s\n", w[i][j]);
-*/
-/*
-    int i, wl[N];
-    char [N];
-    for ( i = 0; *( from = skipspace(from) ); i++ ){
-        w[i] = from;
-        printf("%s", from);
-//        wl[i] = skipword(from) - from;
-    }
-*/    
+    char *w[80];
+    int wl[80], i, l, j;
+    // for(i=0; *( from=skipspace(from) ); from+=wl[i++] ){
+    //     printf("%s", from);
+    // }
+    // for(i=0; *( from=skipspace(from) ); from+=wl[i++] ){
+    //     w[i] = from;
+    //     wl[i] = skipword(from)-from;
+    // }
+    // l=i;
+    // for (i=0 ; i<l ;i++ ){
+    //     for ( j=0; j<wl[i]; j++){
+    //         printf("%d\n", w[i][j]);
+    //     }
+    // }
 }
 
 char *skipspace(char *str){
