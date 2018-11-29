@@ -6,56 +6,59 @@
 */
 
 #include <stdio.h>
-// #include <string.h>
-#define N 100
+#define N 80
 
+void work(char *, char *);
 char *skipspace(char *);
 char *skipword(char *);
-void work(char *, char *);
 
 int main(){
-//    char from[N], to[N];
-    char to[N];
-    char from[] = "help me!\0";
-//    char from[] = "test                            fdfdf           hg       sgh sf sq xx     x     f xsgf ddd", to[N];
-    work(from, to);
-    printf("Результат: %s\n", to);
-/*
-    while( printf("Введите строку. Для выхода введите 0: \n"), gets(from) ){
-        if (from[0] == '0') break;
-        printf("Исходная строка; %s\n", from);
+
+    if (0){
+        char from[] = "abcd me efgh me";
+        char to[N];
+        printf("Исходная строка: %s\n", from);
         work(from, to);
-        printf("Результат; %s\n", to);
+        printf("Результат: %s\n", to);
+        return 0;
+    } else {
+        char from[N], to[N];
+        while (printf("Введите исходную строку\n"), gets(from)){
+            printf("Исходная строка: %s\n", from);
+            work(from, to);
+            printf("Результат: %s\n", to);
+        }
     }
-*/
+
     return 0;
 }
 
-void work (char *from, char *to){
-    char *w[80];
-    int wl[80], i, l, j;
-    // for(i=0; *( from=skipspace(from) ); from+=wl[i++] ){
-    //     printf("%s", from);
-    // }
-    // for(i=0; *( from=skipspace(from) ); from+=wl[i++] ){
-    //     w[i] = from;
-    //     wl[i] = skipword(from)-from;
-    // }
-    // l=i;
-    // for (i=0 ; i<l ;i++ ){
-    //     for ( j=0; j<wl[i]; j++){
-    //         printf("%d\n", w[i][j]);
-    //     }
-    // }
+void work(char *from, char *to){
+    char *words[N], last_char;
+    int word_lenghts[N], i, j, last;
+    for (i = 0; *( from = skipspace(from) ); from += word_lenghts[i++] ){
+        words[i] = from;
+        word_lenghts[i] = skipword(from) - from;
+    }
+    last = i;
+    last_char = words[last-1][0];
+    for( i = 0; i < last; i++ ){
+        if ( last_char == words[i][0] ){
+            if(i) *to++=' ';
+            for( j = 0; j < word_lenghts[i]; j++ ){
+                *to++ =  words[i][j];
+            }
+        }
+    }
+    *to = '\0';
 }
 
 char *skipspace(char *str){
-    for(; *str == ' ' || *str == '\t'; str++);
+    for(; *str == ' ' ||  *str == '\t'; str++);
     return str;
 }
 
 char *skipword(char *str){
-    for(; *str && *str != ' ' || *str != '\t'; str++);
-    return str;
+    for(; *str && *str != ' ' && *str != '\t'; str++);
+    return str;   
 }
-
