@@ -14,13 +14,12 @@ char *skipword(char *);
 
 int main(){
 
-    if (0){
+    if (0){ // debug
         char from[] = "abcd me efgh me";
         char to[N];
         printf("Исходная строка: %s\n", from);
         work(from, to);
         printf("Результат: %s\n", to);
-        return 0;
     } else {
         char from[N], to[N];
         while (printf("Введите исходную строку\n"), gets(from)){
