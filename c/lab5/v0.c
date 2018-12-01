@@ -22,10 +22,11 @@ int main(){
         printf("Результат: %s\n", to);
     } else {
         char from[N], to[N];
-        while (printf("Введите исходную строку\n"), gets(from)){
+        while (printf("Введите исходную строку. Для выхода введите 0: \n"), gets(from)){
+            if (from[0] == '0') break;
             printf("Исходная строка: %s\n", from);
             work(from, to);
-            printf("Результат: %s\n", to);
+            printf("Результат: \"%s\"\n", to);
         }
     }
 
