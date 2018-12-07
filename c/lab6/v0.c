@@ -6,12 +6,12 @@
 #include <string.h>
 #define N 80
 
-void read(char *);
+int read(char *);
 
 int main(){
 
     if (1){
-        char filename[] = "./input.bin";
+        char filename[] = "./as";
         read(filename);
     } else {
         char filename[N];
@@ -26,21 +26,19 @@ int main(){
     return 0;
 }
 
-void read(char *filename){
+int read(char *filename){
 
     FILE *f;
-    char str[N];
-    printf("%s\n", filename);
-
-    f = fopen(filename, "r");
-    if (f == NULL){
+    int symbol;
+    int size_int = sizeof(int);
+    if ( ( f = fopen(filename, "rb") ) == NULL ){
         perror("Ошибка чтения файла");
+        return 1;
+    }
+    
+    while( fread(&symbol, sizeof(int), 1, f) == 1){
+        printf("%d ", symbol);
     }
 
-    while ( !feof(f) ){
-        fgets(str, 30, f);
-        printf("%s", str);
-    }
-
-//    printf("%s\n", strlen(str));
+    fclose(f);
 }
