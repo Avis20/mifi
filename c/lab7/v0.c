@@ -13,6 +13,7 @@ struct item {
 struct item * input_list();
 void print_list(struct item *);
 void free_list(struct item *);
+void sort_list(struct item *);
 
 int main(){
 
@@ -26,7 +27,7 @@ int main(){
 }
 
 struct item * input_list(){
-   struct item *head, *tmp;
+   struct item *head, *tmp, *current;
    int n;
    do {
        printf("Введите кол-во элементов\n");
@@ -43,20 +44,29 @@ struct item * input_list(){
        }
        printf("Введите элемент списка\n");
        scanf("%d", &tmp->number);
+//       printf("%d", tmp->number);
        tmp->next = NULL;
        if (!head){
            head = tmp;
        } else {
-
+           current->next = tmp;
        }
+       current = tmp;
    }
+   return head;
 }
 
 void print_list(struct item *list){
     if ( !list )
         printf("Список пуст");
     else
-        for (; list; list->next) printf("%d\n", list->next);
+        for (; list; list = list->next) printf("%d\n", list->number);
+}
 
+void free_list (struct item *list){
+    if (list){
+        free_list(list->next);
+        free(list);
+    }
 }
 
