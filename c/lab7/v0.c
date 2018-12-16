@@ -11,16 +11,31 @@ struct item {
 };
 
 struct item * input_list();
+struct item * sort_list(struct item *);
 void print_list(struct item *);
 void free_list(struct item *);
-void sort_list(struct item *);
+void work_list(struct item *, struct item **, struct item **);
 
 int main(){
 
-    struct item *list;
+    struct item *list, *odd, *even;
     while ( printf("Введите список\n"), list = input_list() ){
         printf("Исходный список\n");
         print_list(list);
+        work_list(list, &odd, &even);
+        printf("Нечетный список\n");
+        print_list(odd);
+        printf("Четный список\n");
+        print_list(even);
+        odd = sort_list(odd);
+        even = sort_list(even);
+        printf("Сортированный нечетный список\n");
+        print_list(odd);
+        printf("Сортированный четный список\n");
+        print_list(even);
+        free_list(list);
+        free_list(odd);
+        free_list(even);
     }
 
     return 0;
@@ -44,7 +59,6 @@ struct item * input_list(){
        }
        printf("Введите элемент списка\n");
        scanf("%d", &tmp->number);
-//       printf("%d", tmp->number);
        tmp->next = NULL;
        if (!head){
            head = tmp;
@@ -57,10 +71,11 @@ struct item * input_list(){
 }
 
 void print_list(struct item *list){
-    if ( !list )
+    if ( !list ){
         printf("Список пуст");
-    else
+    } else {
         for (; list; list = list->next) printf("%d\n", list->number);
+    }
 }
 
 void free_list (struct item *list){
@@ -70,3 +85,40 @@ void free_list (struct item *list){
     }
 }
 
+void work_list(struct item *list, struct item **odd, struct item **even){
+    if ( !odd || !even ) return;
+    *odd = *even = NULL;
+    for (; list; list = list->next ){
+        if ( list->number % 2 ){
+            *odd = malloc(sizeof(struct item));
+            (*odd)->number = list->number;
+            (*odd)->next = NULL;
+            odd = &(*odd)->next;
+        } else {
+            *even = malloc(sizeof(struct item));
+            (*even)->number = list->number;
+            (*even)->next = NULL;
+            even = &(*even)->next;
+        }
+    }
+}
+
+struct item * sort_list(struct item *list){
+    struct item *result = NULL;
+    while ( list != NULL ){
+        struct item *tmp = list;
+        list = list->next;
+        if ( result == NULL || tmp->number > result->number ){
+            tmp->next = result;
+            result = tmp;
+        } else {
+            struct item *current = result;
+            while (current->next != NULL && !( tmp->number > current->next->number )){
+                current = current->next;
+            }
+            tmp->next = current->next;
+            current->next = tmp;
+        }
+    }
+    return result;
+}
