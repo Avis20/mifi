@@ -7,7 +7,7 @@
 
 struct item {
     int number;
-    struct item * next;
+    struct item *next;
 };
 
 struct item * input_list();
@@ -18,7 +18,7 @@ void work_list(struct item *, struct item **, struct item **);
 
 int main(){
 
-    struct item *list, *odd, *even;
+    struct item *list, *odd, *even, *result;
     while ( printf("Введите список\n"), list = input_list() ){
         printf("Исходный список\n");
         print_list(list);
@@ -33,7 +33,14 @@ int main(){
         print_list(odd);
         printf("Сортированный четный список\n");
         print_list(even);
+        
+        result = odd;
+        
+ 
+        printf("Итоговый список\n");
+        print_list(result);
         free_list(list);
+        free_list(result);
         free_list(odd);
         free_list(even);
     }
