@@ -18,7 +18,7 @@ void work_list(struct item *, struct item **, struct item **);
 
 int main(){
 
-    struct item *list, *odd, *even, *result;
+    struct item *list, *odd, *even, *result, **tmp;
     while ( printf("Введите список\n"), list = input_list() ){
         printf("Исходный список\n");
         print_list(list);
@@ -33,14 +33,18 @@ int main(){
         print_list(odd);
         printf("Сортированный четный список\n");
         print_list(even);
-        
+
         result = odd;
-        
- 
+        *tmp = result;
+        while ( (*tmp)->next != NULL ){
+            *tmp = (*tmp)->next;
+        }
+        (*tmp)->next = even;
+
         printf("Итоговый список\n");
         print_list(result);
-        free_list(list);
         free_list(result);
+        free_list(list);
         free_list(odd);
         free_list(even);
     }
@@ -129,3 +133,19 @@ struct item * sort_list(struct item *list){
     }
     return result;
 }
+
+
+/*
+struct item * split_list(struct item *, struct item *);
+
+struct item *split_list(struct item *odd, struct item *even){
+    struct item *result, **tmp;
+    result = odd;
+    *tmp = result;
+    while ( (*tmp)->next != NULL ){
+        *tmp = (*tmp)->next;
+    }
+    (*tmp)->next = even;
+    return result;
+}
+*/
