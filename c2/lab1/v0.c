@@ -6,34 +6,37 @@ struct Line {
     double *a;  // массив эл.
 };
 
-struct Matrix {
+typedef struct Matrix {
     int lines;  // кол-во строк
     Line *matr; // массив строк
-};
+} HUETA;
 
 void get_int( int *number );  // ввод целого числа
 void get_double( int *number );  // ввод целого числа
 int input(Matrix *matr); // ввод матрицы 
 
 int main (){
-    Matrix matr = {0, NULL};
+    HUETA matr = {0, NULL};
     double res;
-
+    // matr.lines = 5;
+    // printf("%d\n", matr.lines);
+    
     input(&matr);
 
     return 0;
 }
 
-void get_int( int *number ){
-    scanf("%d", &number);
-}
-
-int input(Matrix *matr){
+int input(Matrix *p_matr){
     int i, j, m;
     double *p;
-    // get_int(&m);
-    m = 5;
-    matr->lines = m;
-    matr->matr = (Line *) calloc(m, sizeof(int));
-    
+    get_int(&m);
+    // m = 5;
+    p_matr->lines = 10;
+    printf("%d\n", p_matr->lines);
+    // p_matr->matr = (Line *) calloc(m, sizeof(int));    
+}
+
+
+void get_int( int *number ){
+    scanf("%d", &number);
 }
