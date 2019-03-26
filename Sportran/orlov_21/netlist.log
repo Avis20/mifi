@@ -1,0 +1,26 @@
+Loading - E:\SPORTRAN\ORLOV_21\orlov_21.alb
+   Loading library default timing values
+Info 9240: The following node is sourceless:
+   NODE: CLR, $I1.CLR.
+Info 9240: The following node is sourceless:
+   NODE: C, $I1.C.
+Info 9239: The following node is loadless:
+   NODE: F1, D12.O.
+Info 9239: The following node is loadless:
+   NODE: F2, D13.O.
+Loading - CB4CE
+   Loading library default timing values
+Loading - FTCE
+   Loading library default timing values
+Info 9240: The following node is sourceless:
+   NODE:       C,       $I1/C,       $I1/Q3/C,       $I1/Q2/C,       $I1/Q1/C,       $I1/Q0/C
+Info 9240: The following node is sourceless:
+   NODE:       CLR,       $I1/CLR,       $I1/Q3/CLR,       $I1/Q2/CLR,       $I1/Q0/CLR,       $I1/Q1/CLR
+===============================
+Memory usage statistics:
+    Total number of allocated memory blocks: 71 (0)
+    Total number of memory reallocations: 3
+    Total length of memory used to load the netlist: 256 kB (0)
+    Number of system memory blocks (total/long): 1/0
+Netlist loaded in: 0 seconds
+===============================
