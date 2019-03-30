@@ -28,7 +28,6 @@ int main(){
 int input_matr(Matrix *xmatr){
     char *error_msg = "";
     int count; // кол-во строк
-    int i, j;
 
     do {
         printf("%s\n", error_msg);
