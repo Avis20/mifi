@@ -1,0 +1,48 @@
+[project]
+name=lab4
+netlist=lab4
+contents=lab4
+date=04/02/19
+time=01:32:49
+version=3.1.6.00.18a
+generics=MAX
+Type=F21i
+FndType=F4.1i
+FndTypeE=F4.1i
+top_level=schematic
+library_net=ON
+sim_mode=FUNC
+lib_order=1005 133 167
+[libraries]
+1005=
+133=c:\xilinx\active\syslib\simprims
+167=c:\xilinx\active\syslib\spartan
+[xilinx]
+libraries=unified
+family=2
+xact9=On
+xfam=Spartan
+[device]
+xilinx=S10PC84-3
+part=S10PC84-3
+[netlist]
+external=FALSE
+[Schematic]
+Table01=Project
+Table02=Sheet
+Table03=Date
+Table04=Date Last Modified
+[sheets]
+lab41=
+[Log]
+netlist.log=Simulator Netlist Log
+[timings]
+lab4=
+[FILE7]
+scan_time=1554270838
+[APP_95]
+lid=0
+oid=0
+source=E:\SPORTRAN\LAB4\LAB41.SCH
+[sc_desk]
+desk00=E:\SPORTRAN\LAB4\LAB41.SCH, 0, 0, 1355, 517, 1

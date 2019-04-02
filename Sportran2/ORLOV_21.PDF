@@ -1,0 +1,48 @@
+[project]
+name=orlov_21
+netlist=orlov_21
+contents=orlov_21
+date=03/24/19
+time=15:45:17
+version=3.1.6.00.18a
+generics=MAX
+Type=F21i
+FndType=F4.1i
+FndTypeE=F4.1i
+top_level=schematic
+library_net=ON
+sim_mode=FUNC
+lib_order=1002 133 167
+[libraries]
+1002= 
+133=c:\xilinx\active\syslib\simprims
+167=c:\xilinx\active\syslib\spartan
+[xilinx]
+libraries=unified
+family=2
+xact9=On
+xfam=Spartan
+[device]
+xilinx=S10PC84-3
+part=S10PC84-3
+[netlist]
+external=FALSE
+[Schematic]
+Table01=Project
+Table02=Sheet
+Table03=Date
+Table04=Date Last Modified
+[sheets]
+orlov_21=
+[Log]
+netlist.log=Simulator Netlist Log
+[timings]
+orlov_21=
+[FILE7]
+scan_time=1553475269
+[APP_95]
+lid=0
+oid=0
+source=E:\SPORTRAN\ORLOV_21\ORLOV_21.SCH
+[sc_desk]
+desk00=E:\SPORTRAN\ORLOV_21\ORLOV_21.SCH, 0, 0, 1355, 517, 1

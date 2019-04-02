@@ -1,0 +1,14 @@
+Loading - E:\SPORTRAN\LAB4\lab4.alb
+   Loading library default timing values
+Info 9240: The following node is sourceless:
+   NODE: C, CNT_Q0.C, CNT_Q1.C, CNT_Q2.C, CNT_Q3.C.
+Info 9240: The following node is sourceless:
+   NODE: R, CNT_Q0.CLR, CNT_Q1.CLR, CNT_Q2.CLR, CNT_Q3.CLR.
+===============================
+Memory usage statistics:
+    Total number of allocated memory blocks: 21 (0)
+    Total number of memory reallocations: 3
+    Total length of memory used to load the netlist: 256 kB (0)
+    Number of system memory blocks (total/long): 1/0
+Netlist loaded in: 0 seconds
+===============================

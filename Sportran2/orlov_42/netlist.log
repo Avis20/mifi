@@ -1,0 +1,32 @@
+Loading - E:\SPORTRAN\ORLOV_42\orlov_42.alb
+   Loading library default timing values
+Info 9239: The following node is loadless:
+   NODE: Q0, JK0.Q.
+Info 9239: The following node is loadless:
+   NODE: Q1, JK1.Q.
+Info 9239: The following node is loadless:
+   NODE: Q2, JK2.Q.
+Info 9239: The following node is loadless:
+   NODE: Q3, JK3.Q.
+Info 9240: The following node is sourceless:
+   NODE: R, JK0.CLR, JK1.CLR, JK2.CLR, JK3.CLR.
+Info 9240: The following node is sourceless:
+   NODE: C, JK0.C, JK1.C, JK2.C, JK3.C.
+Info 9240: The following node is sourceless:
+   NODE: CE, JK0.CE, JK1.CE, JK2.CE, JK3.CE.
+Loading - FJKCE
+   Loading library default timing values
+Info 9240: The following node is sourceless:
+   NODE:       CE,       JK0/CE,       JK1/CE,       JK2/CE,       JK3/CE
+Info 9240: The following node is sourceless:
+   NODE:       C,       JK0/C,       JK1/C,       JK2/C,       JK3/C
+Info 9240: The following node is sourceless:
+   NODE:       R,       JK0/CLR,       JK1/CLR,       JK2/CLR,       JK3/CLR
+===============================
+Memory usage statistics:
+    Total number of allocated memory blocks: 52 (0)
+    Total number of memory reallocations: 3
+    Total length of memory used to load the netlist: 256 kB (0)
+    Number of system memory blocks (total/long): 1/0
+Netlist loaded in: 0 seconds
+===============================
