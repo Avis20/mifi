@@ -1,3 +1,5 @@
+// Непрямоугольные матрицы. Лаба 1
+
 #include <stdio.h>
 #include <malloc.h>
 
