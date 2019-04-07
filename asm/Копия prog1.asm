@@ -11,7 +11,7 @@
 .code
     mov AX, @data
     mov DS, AX
-    
+
     mov AL, e   ; AL = e
     mov AH, 0   ; AH = 0
     imul AX     ; AX = e^2
