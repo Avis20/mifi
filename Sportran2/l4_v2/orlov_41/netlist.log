@@ -1,0 +1,14 @@
+Loading - E:\SPORTRAN\ORLOV_41\orlov_41.alb
+   Loading library default timing values
+Info 9240: The following node is sourceless:
+   NODE: R, DV0.CLR, DV1.CLR, DV2.CLR, DV3.CLR.
+Info 9240: The following node is sourceless:
+   NODE: C, DV0.C, DV1.C, DV2.C, DV3.C.
+===============================
+Memory usage statistics:
+    Total number of allocated memory blocks: 21 (0)
+    Total number of memory reallocations: 3
+    Total length of memory used to load the netlist: 256 kB (0)
+    Number of system memory blocks (total/long): 1/0
+Netlist loaded in: 0 seconds
+===============================

@@ -1,0 +1,25 @@
+[project]
+name=orlov_42
+netlist=orlov_42
+contents=
+date=04/03/19
+time=02:39:35
+lib_order=1006 133 167
+version=3.1.6.00.18a
+generics=MAX
+Type=F21i
+FndType=F4.1i
+FndTypeE=F4.1i
+top_level=schematic
+[libraries]
+1006=
+133=c:\xilinx\active\syslib\simprims
+167=c:\xilinx\active\syslib\spartan
+[xilinx]
+libraries=unified
+family=2
+xact9=On
+xfam=Spartan
+[device]
+xilinx=S10PC84-3
+part=S10PC84-3
