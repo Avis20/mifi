@@ -26,18 +26,7 @@ void print_vector(Vector b);
 
 int main(){
     Matrix matr = {0, NULL};
-    double arr[] = {1,2,3,4,5,6,7,8};
     Vector b = {0, NULL};
-    double *pv;
-/*
-    b.count_items = 8;
-    pv = (double *)malloc(sizeof(double)* b.count_items);
-    b.items = pv;
-
-    for (int i = 0; i < 8; ++i, ++pv) {
-        pv[i] = i + 10;
-    }
-*/
 
     if ( input(&matr) == 0 ){
         printf("Matrix is empty\n");
@@ -47,19 +36,22 @@ int main(){
     work(matr, &b);
     output("Source matrix", matr);
     print_vector(b);
-//    printf("Result: %f\n", res);
+
     erase(&matr);
+    free(b.items);      // Освобождаем выделенную память
+    b.count_items = 0;
 
     return 0;
 }
+
 
 void print_vector(Vector v){
     int i, j;
     double *p;
 
-    for (i = 0; i < v.count_items; ++i){
-        p = v.items;
-        printf("%10lf\n", *p);
+    p = v.items;
+    for (i = 0; i < v.count_items; ++i, ++p){
+        printf("sum line %d = %10lf\n", i+1, *p);
     }
 }
 
@@ -69,17 +61,15 @@ void work(Matrix p_matr, Vector *v){
     double *p;
     double *pv;
 
-    v->count_items = p_matr.lines;   // Сколько строк, столько и эл. в векторе
+    v->count_items = p_matr.lines;      // Сколько строк, столько и эл. в векторе
     pv = (double *)malloc(sizeof(double)* v->count_items);
     v->items = pv;
 
-    for (i = 0; i < p_matr.lines; ++i, ++pv){
-        p = p_matr.matr[i].items;
+    for (i = 0; i < p_matr.lines; ++i){
+        p = p_matr.matr[i].items;       // Список строк таблицы
         for (j = 0; j < p_matr.matr[i].count_items; ++j, ++p){
-            *pv += *p;
-//            printf("%10lf ", *p);
+            pv[i] += *p;
         }
-        printf("\n");
     }
 }
 
@@ -174,8 +164,9 @@ void output(const char *msg, Matrix p_matr){
 
 void erase(Matrix *p_matr){
     int i;
-    for (i = 0; i < p_matr->lines; ++i)
-    free(p_matr->matr[i].items);
+    for (i = 0; i < p_matr->lines; ++i){
+        free(p_matr->matr[i].items);
+    }
     free(p_matr->matr);
     p_matr->lines = 0;
     p_matr->matr = NULL;
