@@ -7,26 +7,26 @@ typedef struct Item {
     struct Item *next;
 } Item;
 
-int getList(Item **);
-void putList(const char *, Item *);
-Item *deleteList(Item *);
-Item *newString(Item *);
-Item *delSpace(Item *);
-Item *skipWord(Item *);
-Item *delWord(Item *);
+int get_list(Item **);
+void put_list(const char *, Item *);
+Item *delete_list(Item *);
+Item *new_str(Item *);
+Item *del_space(Item *);
+Item *skip_word(Item *);
+Item *del_word(Item *);
 
 int main(){
     Item *ptr = NULL;
-    while(puts("enter string"), getList(&ptr)){
-        putList("Entered string", ptr);
-        ptr = newString(ptr);
-        putList("Result string", ptr);
-        ptr = deleteList(ptr);
+    while(puts("enter string"), get_list(&ptr)){
+        put_list("Entered string", ptr);
+        ptr = new_str(ptr);
+        put_list("Result string", ptr);
+        ptr = delete_list(ptr);
     }
     return 0;
 }
 
-int getList(Item **pptr){
+int get_list(Item **pptr){
     char buf[21], *str;
     Item head = {'*', NULL};
     Item *last = &head;
@@ -34,7 +34,7 @@ int getList(Item **pptr){
     do {
         n = scanf("%20[^\n]", buf);
         if (n < 0) {
-            deleteList(head.next);
+            delete_list(head.next);
             head.next = NULL;
             rc = 0;
             continue;
@@ -56,7 +56,7 @@ int getList(Item **pptr){
     return rc;
 }
 
-void putList(const char *msg, Item *ptr){
+void put_list(const char *msg, Item *ptr){
     printf("%s: \"", msg);
     for (; ptr != NULL; ptr = ptr->next){
         printf("%c", ptr->c);
@@ -65,7 +65,7 @@ void putList(const char *msg, Item *ptr){
     printf("\"\n");
 }
 
-Item *deleteList(Item *ptr){
+Item *delete_list(Item *ptr){
     Item *tmp = NULL;
     while (ptr != NULL){
         tmp = ptr;
@@ -75,20 +75,20 @@ Item *deleteList(Item *ptr){
     return ptr;
 }
 
-Item *newString(Item *p){
+Item *new_str(Item *p){
     Item head = {'*', p};
     Item *cur = &head, *prev = &head;
     int fl = 0;
-    while(cur && (cur->next = delSpace(cur->next))){
+    while(cur && (cur->next = del_space(cur->next))){
         if (fl){
-            cur = skipWord(cur->next);
+            cur = skip_word(cur->next);
             prev = cur;
             cur = cur->next;
             if (cur){
                 cur->c = ' ';
             }
         } else {
-            cur->next = delWord(cur->next);
+            cur->next = del_word(cur->next);
         }
 
         fl = !fl;
@@ -101,7 +101,7 @@ Item *newString(Item *p){
     return head.next;
 }
 
-Item *delSpace(Item *p){
+Item *del_space(Item *p){
     Item *tmp;
     while(p && (p->c == ' ' || p->c == '\t')){
         tmp = p;
@@ -111,14 +111,14 @@ Item *delSpace(Item *p){
     return p;
 }
 
-Item *skipWord(Item *p){
+Item *skip_word(Item *p){
     while(p->next && p->next->c != ' ' && p->next->c != '\t'){
         p = p->next;
     }
     return p;
 }
 
-Item *delWord(Item *p){
+Item *del_word(Item *p){
     Item *tmp;
     while(p && p->c != ' ' && p->c != '\t'){
         tmp = p;
