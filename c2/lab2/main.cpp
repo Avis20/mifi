@@ -14,16 +14,24 @@ Item *new_str(Item *);
 Item *del_space(Item *);
 Item *skip_word(Item *);
 Item *del_word(Item *);
+void put_char(char *);
 
 int main(){
     Item *ptr = NULL;
-    while(puts("enter string"), get_list(&ptr)){
+    char *first_char, *last_char;
+    puts("Enter string");
+    while( get_list(&ptr) ){
         put_list("Entered string", ptr);
+        put_char("Entered first char", first_char);
         ptr = new_str(ptr);
         put_list("Result string", ptr);
         ptr = delete_list(ptr);
     }
     return 0;
+}
+
+void put_char(char *){
+
 }
 
 int get_list(Item **pptr){
