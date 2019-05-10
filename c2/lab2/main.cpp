@@ -50,7 +50,7 @@ int get_list(Item **pptr){
 
         if (n > 0) {
             for(str = buf; *str != '\0'; ++str){
-                last->next = (Item *)malloc(sizeof(Item));
+                last->next = (Item *) malloc(sizeof(Item));
                 last = last->next;
                 last->c = *str;
             }
