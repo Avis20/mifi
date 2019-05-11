@@ -48,7 +48,7 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../lab2/main.cpp 
+SOURCES       = ../lab2/main.c 
 OBJECTS       = main.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -105,7 +105,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../lab2/lab2.pro  ../lab2/main.cpp
+		../lab2/lab2.pro  ../lab2/main.c
 QMAKE_TARGET  = lab2
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = lab2
@@ -265,7 +265,7 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../lab2/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../lab2/main.c $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -302,8 +302,8 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../lab2/main.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../lab2/main.cpp
+main.o: ../lab2/main.c 
+	$(CC) -c $(CFLAGS) $(INCPATH) -o main.o ../lab2/main.c
 
 ####### Install
 
