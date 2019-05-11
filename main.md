@@ -31,3 +31,21 @@ ax = 91
 SELECT "me".* FROM "playlist"."items" "me"
 WHERE ( "me"."id" IN ( '305', '10488', '10492', '177', '10451' ) ) LIMIT '300'
 
+5cc8512b-0000-0000-0000-000034e4edb7
+
+
+
+
+struct key {
+    char *word;
+    int count;
+} keytable[] = {
+    "auto", 0,
+    "break", 0,
+    "case", 0,
+    "char", 0
+};
+
+#define NKEYS (sizeof keytable / sizeof keytable[0] )
+
+

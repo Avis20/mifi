@@ -47,25 +47,28 @@ int main(){
 
     while ( puts("\nEnter string"), get_list(&ptr) ){
 
-        puts("Enter first character");
-        get_char(&first_char);
+//        puts("Enter first character");
+//        get_char(&first_char);
 
-        puts("Enter last character");
-        get_char(&last_char);
+//        puts("Enter last character");
+//        get_char(&last_char);
 
-        put_char("Entered first char", first_char);
-        put_char("Entered last char", last_char);
+//        put_char("Entered first char", first_char);
+//        put_char("Entered last char", last_char);
 
-        put_list("Entered string", ptr);
+//        put_list("Entered string", ptr);
+          put_list("Entered string", ptr);
 
-        ptr = work(ptr, first_char, last_char);
-        // ptr = new_str(ptr);
-        // put_list("Result string", ptr);
-        ptr = delete_list(ptr);
+//        ptr = work(ptr, first_char, last_char);
+//        // ptr = new_str(ptr);
+//        // put_list("Result string", ptr);
+//        ptr = delete_list(ptr);
+
     }
+
+    printf("See you next time...\n");
     return 0;
 }
-
 
 Item *work(Item *ptr, char f, char l){
 
@@ -87,7 +90,7 @@ Item *work(Item *ptr, char f, char l){
     }
 */
     
-    return head.next;
+//    return head.next;
 }
 
 Item *new_str(Item *p){
