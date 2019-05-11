@@ -69,6 +69,12 @@ int main(){
 
 Item *work(Item *ptr, char f, char l){
 
+    while (ptr && (ptr->next = del_space(ptr->next))){
+        if ( ptr->c == f ){
+            
+        }
+    }
+
 /*
    Item head = {'*', ptr}, *cur = &head;
     int fl = 0;
@@ -85,9 +91,9 @@ Item *work(Item *ptr, char f, char l){
         free(prev->next);
         prev->next = NULL;
     }
-*/
-    
     return head.next;
+*/
+    return ptr;
 }
 
 Item *new_str(Item *p){
