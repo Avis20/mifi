@@ -35,6 +35,7 @@ void put_list(const char *, Item *);
 Item *delete_list(Item *);
 Item *new_str(Item *);
 Item *del_space(Item *);
+Item *del_spaces(Item *);
 Item *skip_word(Item *);
 Item *del_word(Item *);
 int get_char(char *c);
@@ -47,23 +48,21 @@ int main(){
 
     while ( puts("\nEnter string"), get_list(&ptr) ){
 
-//        puts("Enter first character");
-//        get_char(&first_char);
+        puts("Enter first character");
+        get_char(&first_char);
 
-//        puts("Enter last character");
-//        get_char(&last_char);
+        puts("Enter last character");
+        get_char(&last_char);
 
-//        put_char("Entered first char", first_char);
-//        put_char("Entered last char", last_char);
+        put_char("Entered first char", first_char);
+        put_char("Entered last char", last_char);
 
-//        put_list("Entered string", ptr);
-          put_list("Entered string", ptr);
+        put_list("Entered string", ptr);
+        put_list("Entered string", ptr);
 
-//        ptr = work(ptr, first_char, last_char);
-//        // ptr = new_str(ptr);
-//        // put_list("Result string", ptr);
-//        ptr = delete_list(ptr);
-
+        ptr = work(ptr, first_char, last_char);
+        put_list("Result string", ptr);
+        ptr = delete_list(ptr);
     }
 
     printf("See you next time...\n");
@@ -72,38 +71,34 @@ int main(){
 
 Item *work(Item *ptr, char f, char l){
 
-    while (ptr && (ptr->next = del_space(ptr->next))){
-        if ( ptr->c == f ){
-            
+    Item *head = ptr;
+    int fl = 1;
+    int space = 0;
+
+    ptr = del_spaces(ptr);
+
+    while ( ptr ){
+
+        if ( ptr->c == f && fl ){
+            head = ptr;
+            fl = 0;
         }
-    }
 
-/*
-   Item head = {'*', ptr}, *cur = &head;
-    int fl = 0;
-
-    while (cur && (cur->next = del_space(cur->next))){
-        if ( cur->c == f ){
-
-        } else {
-            cur = cur->next;
+        if ( ptr->c == l ){
+            ptr->next = NULL;
+            break;
         }
-    }
 
-    if (prev->next){
-        free(prev->next);
-        prev->next = NULL;
+        ptr = ptr->next;
     }
-    
-    return head.next;
-*/
+    return head;
 }
 
 Item *new_str(Item *p){
     Item head = {'*', p};
     Item *cur = &head, *prev = &head;
     int fl = 0;
-    while(cur && (cur->next = del_space(cur->next))){
+    while ( cur && (cur->next = del_space(cur->next))){
         if (fl){
             cur = skip_word(cur->next);
             prev = cur;
@@ -198,10 +193,9 @@ Item *delete_list(Item *ptr){
     return ptr;
 }
 
-
 Item *del_space(Item *p){
     Item *tmp;
-    while(p && (p->c == ' ' || p->c == '\t')){
+    while (p && (p->c == ' ' || p->c == '\t')){
         tmp = p;
         p = p->next;
         free(tmp);
