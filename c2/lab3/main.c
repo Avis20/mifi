@@ -57,7 +57,7 @@ int main(){
     return 0;
 }
 
-int dialog(const char *msgs[ ], int N){
+int dialog(const char *msgs[], int N){
     char *errmsg = "";
     int rc;
     int i, n;
@@ -93,7 +93,7 @@ int D_Add(Table *ptab) {
 
     rc = insert(ptab, k, info);
     printf("add status: %d", rc);
-    //printf("%s: %d\n", errmsgs[rc], k);
+    
     return 1;
 }
 
@@ -188,7 +188,7 @@ char *getStr(){
 int insert (Table *ptab, int k, char *str) {
     int hashKey = getHashKey(k);
 
-    // printf("find result: %d\n", find(ptab, k, hashKey));
+    if (DEBUG) printf("[DEBUG] find result: %d\n", find(ptab, k, hashKey));
     if (find(ptab, k, hashKey)) {
         printf("Error: Duplicate key: %d\n", k);
         return 1; // double key
@@ -221,9 +221,11 @@ int getHashKey(int key) {
 
 int find(Table *ptab, int k, int hashKey) {
     Item *proc = ptab->first[hashKey];
-    //printf("find proc: %d\t%s\n", proc->key, proc->info);
+    
+    if (DEBUG) printf("[DEBUG] find proc: %d\t%s\n", proc->key, proc->info);
     while(proc) {
-        //printf("key: %d value[0]: '%s'\n", proc->key, proc->info );
+        
+        if (DEBUG) printf("[DEBUG] key: %d value[0]: '%s'\n", proc->key, proc->info );
         if (proc->key == k) {
             return 1;
         }
