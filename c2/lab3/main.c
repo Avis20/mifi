@@ -216,7 +216,7 @@ int insert (Table *ptab, int k, char *str) {
 }
 
 int getHashKey(int key) {
-    return key % 10;
+    return key % SIZE;
 }
 
 int find(Table *ptab, int k, int hashKey) {
