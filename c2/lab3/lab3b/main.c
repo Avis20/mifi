@@ -1,277 +1,328 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <string.h>
-#include <malloc.h>
 
-const char *msgs[] = {"0. Quit", "1. Add", "2. Find", "3. Delete", "4. Random", "5. Show"};
+const char *msgs[] = {"0. Quit", "1. Add","2. Find", "3. Delete", "4. Show"};
 const int NMsgs = sizeof(msgs) / sizeof(msgs[0]);
 const int DEBUG = 1;
 
 typedef struct item {
+    int busy;       // Флаг что у эл. с этим ключем есть данные
     int key;        // Ключ по которому забираются данные
-    int release;    // Версия эл.
-    int size;       // Размер строки
-    char *info;     // Сами данные
-    int offset;     // Смещение в файле
-    struct item *next;
+    int size;
+    int offset;
 } Item;
 
 typedef struct table {
-    int size;           // Размер таблицы
-    Item **list;        // Список эл. таблицы
-    FILE *file;         // Файловый дескриптор
-    char *filename;     // путь до файла
+    int size;       // Размер таблицы
+    Item **first;   // Первый эл. таблицы
+    char *filename;
+    FILE *file;
 } Table;
 
+// dialog
+int     dialog(const char *msgs[], int);
 int     D_Add(Table *);     // Добавление эл. в таблицу
 int     D_Find(Table *);    // Поиск в таб
-int     D_Delete(Table *);  // Удаление по ключу (?)
+int     D_Delete(Table *);  // Удаление по ключу
 int     D_Show(Table *);    // Вывод таблицы на экран
-int     D_Random(Table *);  // Наполнение рандомными данными
 
-int     dialog(const char *msgs[], int);
-int     getInt(int *);
-char *  getStr();
-char *  addExtension(char *, char *);
-
+// table
 int     insert(Table *, int, char *);
+int     printTable(Table *);
+char    *find(Table *, int);
+int     delElem(Table *, int);
+int     delTable(Table *);
+
+// support
+int     getInt(int *);
+char    *getStr();
 int     getHashKey(int, int);
 
-int     printTable(Table *);
-
+// file
+char    *add_extension(char *, char *);
+char    *read_data(FILE *, Item *, char *);
+int     write_data(FILE *, char *, int);
 void    open(Table *);
 void    load(Table *);
 void    close(Table *);
-char *  readData(FILE *, Item *, char *);
-int     writeData(FILE *, char *, int);
 
-int (*fptr[])(Table *) = {NULL, D_Add, D_Find, D_Delete, D_Random, D_Show};
+// DELETE
+void init(Table *);
 
-int main(){
+int main() {
+    // Table table = { ptab->size, (Item **) calloc(ptab->size, sizeof(Item *)) };
     Table table = {0, NULL, NULL, NULL};
     int rc;
-
+    int (*fptr[])(Table *) = {NULL, D_Add, D_Find, D_Delete, D_Show};
+    
     open(&table);
+    // init(&table);
 
-    while ( rc = dialog(msgs, NMsgs) )
-        if ( !fptr[rc](&table) )
+    while (rc = dialog(msgs, NMsgs)) {
+        printf("selected: %d\n", rc);
+        if (!fptr[rc](&table)) {
             break;
+        }
+    }
 
     printf("See you next time...\n");
+
     close(&table);
     // delTable(&table);
     return 0;
 }
 
-void open(Table *pTab){
-    printf("Enter file name: ");
+void close(Table *ptab){
+    int i = 0, count = 0, offset = 0;
+    Item *current = NULL, *p = NULL;
+    fclose(ptab->file);
 
-    pTab->filename = getStr();
-    char *filenameData = addExtension(pTab->filename, ".data");
+    ptab->file = fopen(ptab->filename,"w+b");
+    fwrite(&ptab->size, sizeof(int), 1, ptab->file);
 
-    printf("%s; ", pTab->filename);
-    if ( pTab->file = fopen(pTab->filename, "r+b") ){
-        printf("File is loaded!\n");
-        load(pTab);
-        fclose(pTab->file);
-        pTab->file = fopen(filenameData,"r+b");
-    } else {
-        printf("Enter size of table: ");
-        getInt(&pTab->size);
-        pTab->list = (Item **) calloc(pTab->size, sizeof(Item *));
-        
-        printf("File is created!\n");
-        pTab->file = fopen(filenameData,"w+b");
+    for (i = 0; i < ptab->size; count = 0, i++){
+        p = ptab->first[i];
+    
+        fseek(ptab->file, 0, SEEK_END);
+        offset = ftell(ptab->file);
+        fwrite(&count, sizeof(int), 1, ptab->file);
+
+        if (p){
+            count = count + 1;
+            fwrite(&p->key, sizeof(int), 1, ptab->file);
+            fwrite(&p->busy, sizeof(int), 1, ptab->file);
+            fwrite(&p->size, sizeof(int), 1, ptab->file);
+            fwrite(&p->offset, sizeof(int), 1, ptab->file);
+
+            free(p);
+        }
+
+        fseek(ptab->file, offset, SEEK_SET);
+        fwrite(&count, sizeof(int), 1, ptab->file);
     }
+    fclose(ptab->file);
 
-    free(filenameData);
+    free(ptab->filename);
+    free(ptab->first);
 }
 
-void load(Table *pTab){
-    int count = 0;
-    Item *current = NULL, *last = NULL;  
-    
-    fread(&pTab->size, sizeof(int), 1, pTab->file);
-    
-    pTab->list = (Item **) calloc(pTab->size, sizeof(Item *));
+void open(Table *ptab){
+    char *filename_data = NULL;
+    //system("cls");
+    printf("Enter file name: ");
 
-    for (int i = 0; i < pTab->size; count = 0,  i++){
-        fread(&count, sizeof(int), 1, pTab->file);
+    ptab->filename = getStr();
+
+    filename_data = add_extension(ptab->filename, ".data");
+    if (ptab->file = fopen(ptab->filename, "r+b")){
+        load(ptab);
+        fclose(ptab->file);
+        printf("File is loaded!\n");
+        ptab->file = fopen(filename_data, "r+b");
+    } else{ 
+        printf("Enter size of table: ");
+        getInt(&ptab->size);
+        ptab->first = (Item **) calloc(ptab->size, sizeof(Item *));
         
+        printf("File is created!\n");
+        ptab->file = fopen(filename_data,"w+b");
+    }
+
+    free(filename_data);
+}
+
+void load(Table *ptab){
+    int i = 0, count = 0;
+    Item *current = NULL;
+    
+    fread(&ptab->size, sizeof(int), 1, ptab->file);
+    ptab->first = (Item **) calloc(ptab->size, sizeof(Item *));
+
+    for (i = 0; i < ptab->size; count = 0, i++){
+        fread(&count, sizeof(int), 1, ptab->file);
         while (--count >= 0){
             current = (Item *) calloc(1, sizeof(Item));
 
-            fread(&current->key, sizeof(int), 1, pTab->file);
-            fread(&current->size, sizeof(int), 1, pTab->file);
-            fread(&current->offset, sizeof(int), 1, pTab->file);
+            fread(&current->key, sizeof(int), 1, ptab->file);
+            fread(&current->busy, sizeof(int), 1, ptab->file);
+            fread(&current->size, sizeof(int), 1, ptab->file);
+            fread(&current->offset, sizeof(int), 1, ptab->file);
     
-            if (pTab->list[i] == NULL){
-                pTab->list[i] = current;
-            } else {
-                last->next = current;
-            }
-    
-            last = current;
+            if (ptab->first[i] == NULL) ptab->first[i] = current;
         }
     }
 }
 
-char * addExtension(char *filename, char *extension){
-    char *tmp = (char *) calloc( strlen(filename) + strlen(extension) + 1, sizeof(char) );
-    strcpy(tmp, filename);
-    strcat(tmp, extension);
-    return tmp;
+void init(Table *ptab){
+
+    int arr[] = {12, 48, 3, 5, 7, 63, 15, 202, 130};
+    int size = sizeof(arr) / sizeof(arr[0]);
+    for (int i = 0; i < size; ++i){
+        insert(ptab, arr[i], "test");
+    }
 }
 
-int dialog(const char *msgs[], int N){
+int dialog(const char *msgs[ ], int N){
     char *errmsg = "";
     int rc;
     int i, n;
-
     do {
         puts(errmsg);
         errmsg = "You are wrong. Repeat, please!";
-        for (i = 0; i < N; ++i)
+
+        for(i = 0; i < N; ++i) {
             puts(msgs[i]);
-        
+        }
         puts("Make your choice: --> ");
         n = getInt(&rc);
-        if (n == 0) rc = 0;
+        if (n == 0) {
+            rc = 0;
+        }
     } while (rc < 0 || rc >= N);
-
     return rc;
 }
 
-int D_Add(Table *pTab) {
+int D_Add(Table *ptab) {
     int k, rc, n;
     char *info = NULL;
-    
-    printf("Enter key: -->\n");
-    n = getInt(&k);
 
+    printf("Enter key: --> ");
+    n = getInt(&k);
     if (n == 0) return 0;
 
     printf("Enter info:\n");
     info = getStr();
 
-    if (DEBUG) printf("[DEBUG] after enter string\n");
+    printf("after enter string\n");
     if (info == NULL) return 0;
 
-    rc = insert(pTab, k, info);
+    rc = insert(ptab, k, info);
     printf("add status: %d", rc);
+    return 1;
+}
+
+int D_Find(Table *ptab) {
+    int key;
+    char *info;
+    printf("Enter key: --> ");
+    getInt(&key);
+
+    info = find(ptab, key);
+    printf("Result: %s\n", info);
+    return 1;
+}
+
+int D_Delete(Table *ptab){
+    int key;
+    printf("Enter key: -->\n");
+    getInt(&key);
     
+    if ( delElem(ptab, key) ) {
+        printf("Delete successful\n");
+    } else {
+        printf("Delete not soccessful\n");
+    }
+
     return 1;
 }
 
-int D_Find(Table *pTab){
-    return 1;
-};
-
-int D_Delete(Table *pTab){
+int D_Show(Table *ptab) {
+    printTable(ptab);
     return 1;
 }
 
-int D_Random(Table *pTab){
-    return 1;
-};
-
-int D_Show(Table *pTab) {
-    printTable(pTab);
-    return 1;
-}
-
-int getInt(int *a) {
-    int n;
-    do {
-        n = scanf("%i", a);
-        if (n < 0) return 0;
-
-        if (n == 0) {
-            printf("%s\n", "Error! Repeat input");
-            scanf("%*c");
-        }
-    } while (n == 0);
-    
-    scanf("%*c"); // возможно лишнее
-    return 1;
-}
-
-char *getStr(){
-    char buf[21], *s = NULL;
-    int i = 0, n;
-
-    do {
-        while ( scanf("%24[^\n]",buf) == EOF ){
-            printf("Error: repeat input: ");
-        }
-
-        if ( !i++ ){
-            s = (char *) calloc(sizeof(buf),sizeof(char));
-        } else{
-            s = (char *) realloc(s, i * sizeof(buf));
-        }
-
-        strcat(s, buf);
-    } while( !scanf("%1[\n]",buf) );
-    
-    return s;
-}
-
-int insert (Table *pTab, int key, char *str) {
-    int hashKey = getHashKey(key, pTab->size);
-    Item *newItem = NULL, *tmp = NULL;
-
-    newItem = (Item *) calloc(1, sizeof(Item));
-    newItem->key = key;
-    newItem->size = strlen(str) + 1;
-    newItem->offset = writeData(pTab->file, str, newItem->size);
-    newItem->next = pTab->list[hashKey];
-    pTab->list[hashKey] = newItem;
-    
-    (pTab->size)++;
-    return 0;
-}
+// ############ SUPPORT
 
 int getHashKey(int key, int size) {
     return key % size;
 }
 
-int find(Table *pTab, int k, int hashKey) {
-    return 0;
+int getInt(int *a){
+    int n;
+    do {
+       n = scanf("%i", a);
+       if (n < 0) return 0;
+
+       if (n == 0){
+            printf("%s\n", "Error! Repeat input");
+            scanf("%*c");
+       }
+    } while (n == 0);
+    scanf("%*c"); // возможно лишнее
+    return 1;
 }
 
-int printTable(Table *pTab){
-    int i = 0, f = -1;
+char *getStr(){
+    char buf[21];
+    int i = 0, n;
+    char *s = NULL;
+
+    do {
+       while (scanf("%24[^\n]", buf) == EOF){
+            printf("Ошибка ввода! Повторите ввод: ");
+       }
+
+       if (!i++){
+            s = (char *)calloc(sizeof(buf),sizeof(char));
+       } else {
+            s = (char *)realloc(s, i * sizeof(buf));
+       }
+
+       strcat(s, buf);
+    } while (!scanf("%1[\n]",buf));
+
+    return s;
+}
+
+char *find(Table *ptab, int key) {
+    int hashKey = getHashKey(key, ptab->size);
+    Item *p = NULL;
     char *data = NULL;
-    Item *tmp = NULL;
-    
-    printf("Key:\tRelease:\tInfo:\n");
-    for (i = 0; i < pTab->size; i++){
-        if ( (tmp = pTab->list[i]) != NULL ){
-            f = 0;
-            printf("-----------------------------\n");
-            while (tmp){
-                data = (char *) calloc(tmp->size, sizeof(char));
-                data = readData(pTab->file, tmp, data);
+    int n = 0;
 
-                printf("%d\t%d\t%s\n", i, tmp->key, data);
-                tmp = tmp->next;        
-                free(data);
-            }
-        } else {
-            printf("-----------------------------\n");
-            printf("%d\tNULL\n", i);
+    while ( ( p = ptab->first[hashKey] ) && p->busy != -1 && n < ptab->size ){
+        if ( p && p->key == key ){
+            data = (char *) calloc(p->size, sizeof(char));
+            data = read_data(ptab->file, p, data);
+            return data;
         }
-    }
-    return f;
-}
-
-char * getInfoByKey(Table *pTab, int key) {
+        hashKey = ( hashKey + 1 ) % ptab->size;
+        n++;
+    };
     return "Element not Found";
 }
 
-int writeData(FILE *file, char *data, int size){
+char *read_data(FILE *file, Item *node, char *data){
+    fseek(file, node->offset, SEEK_SET);
+    fread(data, sizeof(char), node->size, file);
+    return data;
+}
+
+int printTable(Table *ptab){
+    int i = 0;
+    char *data = NULL;
+    Item *p = NULL;
+
+    if (DEBUG) printf("[DEBUG] ptab->size = %d\n", ptab->size);
+
+    printf("Item:\tKey:\tBusy:\tValue:\n");
+    for (i = 0; i < ptab->size; i++){
+        if ( (p = ptab->first[i]) != NULL ){
+            data = (char *) calloc(p->size, sizeof(char));
+            data = read_data(ptab->file, p, data);
+            printf("-----------------------------\n");
+            printf("%d\t%d\t%d\t%s\n", i, p->key, p->busy, data);
+            free(data);
+        } else {
+            printf("-----------------------------\n");
+            printf("%d\t\tNULL\n", i);
+        }
+    }
+    return 1;
+}
+
+int write_data(FILE *file, char *data, int size){
     int offset = 0;
     fseek(file, 0, SEEK_END);
     offset = ftell(file);
@@ -279,44 +330,62 @@ int writeData(FILE *file, char *data, int size){
     return offset;
 }
 
-char * readData(FILE *file, Item *node, char *data){
-    fseek(file, node->offset, SEEK_SET);
-    fread(data, sizeof(char), node->size, file);
-    return data;
+int insert (Table *ptab, int key, char *str) {
+    int hashKey = getHashKey(key, ptab->size);
+    Item *p = NULL;
+    int n = 0;
+
+    while ( ( p = ptab->first[hashKey] ) && p->busy != -1 && n < ptab->size ){
+        hashKey = ( hashKey + 1 ) % ptab->size;
+        n++;
+    };
+
+    if ( n < ptab->size ){
+        Item *newItem = NULL;
+        newItem = (Item *) calloc(1, sizeof(Item));
+        newItem->key = key;
+        newItem->busy = 1;
+        newItem->size = strlen(str) + 1;
+        newItem->offset = write_data(ptab->file, str, newItem->size);
+        ptab->first[hashKey] = newItem;
+    } else {
+        printf("Error: The table has reached a certain size: %d elements\n", ptab->size);
+        return 2;
+    }
+
+    return 0;
 }
 
+int delElem(Table *ptab, int key) {
+    int hashKey = getHashKey(key, ptab->size);
+    Item *p = NULL;
+    int n = 0;
 
-void close(Table *pTab){
-    int i = 0, count = 0, offset = 0;
-    Item *del = NULL, *p = NULL;
-    fclose(pTab->file);
-    
-    pTab->file = fopen(pTab->filename,"w+b");
-    fwrite(&pTab->size, sizeof(int), 1, pTab->file);
-
-    for(i = 0; i < pTab->size; count = 0, i++){
-        p = pTab->list[i];
-    
-        fseek(pTab->file, 0, SEEK_END);
-        offset = ftell(pTab->file);
-        fwrite(&count, sizeof(int), 1, pTab->file);
-
-        while(p){
-            count = count + 1;
-            fwrite(&p->key, sizeof(int), 1, pTab->file);
-            fwrite(&p->size, sizeof(int), 1, pTab->file);
-            fwrite(&p->offset, sizeof(int), 1, pTab->file);
-
-            del = p;
-            p = del->next;
-            free(del);
+    while ( ( p = ptab->first[hashKey] ) && n < ptab->size ){
+        if ( p && p->key == key ){
+            p->busy = -1;
+            return 1;
         }
+        hashKey = ( hashKey + 1 ) % ptab->size;
+        n++;
+    };    
+    return 0;
+}
 
-        fseek(pTab->file, offset, SEEK_SET);
-        fwrite(&count, sizeof(int), 1, pTab->file);
+int delTable(Table *ptab){
+    Item *p = NULL;
+
+    for (int i = 0; i < ptab->size; i++){
+        if ( (p = ptab->first[i]) != NULL ){
+            free(p);
+        }
     }
-    fclose(pTab->file);
+    return 1;
+}
 
-    free(pTab->filename);
-    free(pTab->list);
-}   
+char *add_extension(char *filename, char *extension){
+    char *tmp = (char *) calloc( strlen(filename) + strlen(extension) + 1, sizeof(char));
+    strcpy(tmp, filename);
+    strcat(tmp, extension);
+    return tmp;
+}
