@@ -48,7 +48,7 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../lab3a/main.cpp 
+SOURCES       = ../lab3a/main.c 
 OBJECTS       = main.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -104,7 +104,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../lab3a/lab3a.pro  ../lab3a/main.cpp
+		../lab3a/lab3a.pro  ../lab3a/main.c
 QMAKE_TARGET  = lab3a
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = lab3a
@@ -262,7 +262,7 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../lab3a/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../lab3a/main.c $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -299,8 +299,8 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../lab3a/main.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../lab3a/main.cpp
+main.o: ../lab3a/main.c 
+	$(CC) -c $(CFLAGS) $(INCPATH) -o main.o ../lab3a/main.c
 
 ####### Install
 
