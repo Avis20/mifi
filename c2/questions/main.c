@@ -20,7 +20,7 @@ void print(Queue *);
 int main(){
 
     Queue queue = {NULL, NULL};
-    int Q[] = {10, 12, 23, 38, 43, 58};
+    int Q[] = {12, 23, 38, 43, 58};
     int size = sizeof(Q) / sizeof(Q[0]);
     init(&queue, Q, size);
 
@@ -48,8 +48,33 @@ int main(){
 
 // Извлечение элемента из очереди
 int get(Queue *queue, int *pel){
-    Node* node;
+   
+   // Вспомогательная переменная, в начале принимает значение вершины
+   Node *node = queue->head;
  
+   // Если список не пуст
+   if (node){
+      
+      // Если в списке всего один элемент
+      if (queue->head == queue->tail){
+         queue->head = queue->tail = NULL;
+      } else{
+         
+         // указатель на голову смещаем ниже на один узел
+         queue->head = node->next;
+         
+         // Хвост должен указывать на новый верхний узел
+         queue->tail->next = queue->head;
+      }
+ 
+      // Удаляем отделённый узел
+      free(node);
+   }
+ 
+   return queue;
+}
+
+/
     // Пока есть элементы в очереди
     if (queue->head){
         // Сохраняем указатель на удаляемый элемент
