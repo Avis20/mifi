@@ -23,11 +23,10 @@ int main(){
     int n = 3;
 
     while ( n-- > 0 ){
-        printf("-%d\n", n);
+        printf("%d; ", n);
         ptr = ptr->next;
     }
 
-     printf("%d\n", ptr->k);
-
+    printf("%d\n", ptr->k);
     return 0;
 }
