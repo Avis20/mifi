@@ -1,32 +1,113 @@
 #include <stdio.h>
+#include <malloc.h>
 
-/* Примеры вопросов
-*/
+typedef struct Node {   // Узел
+    int data;           // Само значение
+    struct Node *next;  // Указатель на следующий элемент
+} Node;
 
-// 1.
-// Элемент списка имеет след. структуру
-struct Item {
-    int k;
-    struct Item *next;
-};
+typedef struct queue {  // Очередь
+    Node *head;         // Вершина очереди
+    Node *tail;         // Хвост
+} Queue;
+
+int put(Queue *, int);
+int get(Queue *, int *);
+
+int init(Queue *, int *, int);
+void print(Queue *);
 
 int main(){
-    struct Item a[5] = {
-        {12, a + 3},
-        {25, NULL},
-        {38, a + 2},
-        {47, a + 4},
-        {20, a + 1}
+
+    Queue queue = {NULL, NULL};
+    int Q[] = {10, 12, 23, 38, 43, 58};
+    int size = sizeof(Q) / sizeof(Q[0]);
+    init(&queue, Q, size);
+
+    int pb = 5, pe = 3; // Что это? Oo
+
+    printf("AFTER INIT\n");
+    print(&queue);
+    printf("\n");
+
+    printf("AFTER GET\n");
+    int el;
+    get(&queue, &el);
+    printf("el = %d\n", el);
+    print(&queue);
+    printf("\n");
+
+    printf("AFTER PUT\n");
+    put(&queue, 3);
+    put(&queue, 13);
+    print(&queue);
+    printf("\n");
+
+    return 0;
+}
+
+// Извлечение элемента из очереди
+int get(Queue *queue, int *pel){
+    Node* node;
+ 
+    // Пока есть элементы в очереди
+    if (queue->head){
+        // Сохраняем указатель на удаляемый элемент
+        node = queue->head;
+
+        // Сохраняем значение удаляемого элемента
+        *pel = node->data;
+
+        // Вершиной очереди становится следующий за удаляемым элемент
+        queue->head = queue->head->next;
+
+        // Окончательно удаляем элемент
+        free(node);
+    }
+ 
+    return 1;
+}
+
+void print(Queue *queue){
+    Node *node = queue->head;
+    
+    printf("HEAD = %d; TAIL = %d\nQueue: ", queue->head->data, queue->tail->data);
+
+    do {
+        printf("%d, ", node->data);
+    } while ( ( node = node->next ) != NULL );
+
+    printf("\n");
+}
+
+int init(Queue *queue, int *arr, int size){
+    for (int i = 0; i < size; i++){
+        put(queue, arr[i]);
     };
+}
 
-    struct Item *ptr = a;
-    int n = 3;
+int put(Queue *queue, int el){
 
-    while ( n-- > 0 ){
-        printf("%d; ", n);
-        ptr = ptr->next;
+    // Создание нового узла
+    Node *node = malloc(sizeof(Node));
+
+    // Присваиваем значение новому узлу
+    node->data = el;
+
+    // Т.к. элемент добавляется в хвост, то указатель на следующий элемент ни на что не ссылается
+    node->next = NULL;
+
+    // Если очередь не пуста, то
+    if (queue->head && queue->tail){
+        
+        // Хвостовой элемент ссылается на созданный узел
+        queue->tail->next = node;
+        // Созданный узел становится хвостом
+        queue->tail = node;
+    } else {
+        // Первый элемент, теперь он и вершина и хвост
+        queue->head = queue->tail = node;
     }
 
-    printf("%d\n", ptr->k);
-    return 0;
+    return 1;
 }

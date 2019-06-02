@@ -7,6 +7,8 @@
 
 ### I
 
+<a href="https://rextester.com/IHCWI97164" target="_blank">RUN</a>
+
 Элемент списка имеет след. структуру
 
 ```
@@ -43,12 +45,11 @@ printf("%d\n", ptr->k);
 
 Ответ: 25
 
-<a href="https://rextester.com/IHCWI97164">run</a>
-
-
 ## Очередь
 
 ### I
+
+<a href="https://rextester.com/LXXMQN56540" target="_blank">RUN</a>
 
 Очередь представленная вектором, задана след. образом
 
@@ -94,3 +95,4 @@ put(13);
 sda
     </code></pre>
 </details>
+
