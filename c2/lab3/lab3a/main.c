@@ -4,7 +4,7 @@
 
 const char *msgs[] = {"0. Quit", "1. Add","2. Find", "3. Delete", "4. Show"};
 const int NMsgs = sizeof(msgs) / sizeof(msgs[0]);
-const int SIZE = 10, DEBUG = 1;
+const int SIZE = 10, DEBUG = 0;
 
 typedef struct item {
     int busy;       // Флаг что у эл. с этим ключем есть данные
@@ -17,21 +17,21 @@ typedef struct table {
     Item **first;   // Первый эл. таблицы
 } Table;
 
-int     D_Add(Table *);     // Добавление эл. в таблицу
-int     D_Find(Table *);    // Поиск в таб
-int     D_Delete(Table *);  // Удаление по ключу
-int     D_Show(Table *);    // Вывод таблицы на экран
+int D_Add(Table *);     // Добавление эл. в таблицу
+int D_Find(Table *);    // Поиск в таб
+int D_Delete(Table *);  // Удаление по ключу
+int D_Show(Table *);    // Вывод таблицы на экран
 
-int     dialog(const char *msgs[], int);
-int     getInt(int *a);
-char    *getStr();
-int     getHaskKey(int key);
-char    *find(Table *ptab, int key);
+int dialog(const char *msgs[], int);
+int getInt(int *a);
+char *getStr();
+int getHaskKey(int key);
+char *find(Table *ptab, int key);
 
-int     insert(Table *, int, char *);
-int     printTable(Table *);
-int     delElem(Table *, int);
-int     delTable(Table *);
+int insert(Table *, int, char *);
+int printTable(Table *);
+int delElem(Table *, int);
+int delTable(Table *);
 
 // DELETE
 void init(Table *ptab);
@@ -43,7 +43,7 @@ int main() {
 
     // init(&table);
 
-    while (rc = dialog(msgs, NMsgs)) {
+    while (rc = dialog(msgs, NMsgs)){
         printf("selected: %d\n", rc);
         if (!fptr[rc](&table)) {
             break;
@@ -84,7 +84,7 @@ int dialog(const char *msgs[ ], int N){
     return rc;
 }
 
-int D_Add(Table *ptab) {
+int D_Add(Table *ptab){
     int k, rc, n;
     char *info = NULL;
 
@@ -103,7 +103,7 @@ int D_Add(Table *ptab) {
     return 1;
 }
 
-int D_Find(Table *ptab) {
+int D_Find(Table *ptab){
     int key;
     char *info;
     printf("Enter key: --> ");
@@ -128,7 +128,7 @@ int D_Delete(Table *ptab){
     return 1;
 }
 
-int D_Show(Table *ptab) {
+int D_Show(Table *ptab){
     printTable(ptab);
     return 1;
 }
@@ -191,7 +191,7 @@ char *find(Table *ptab, int key) {
     return "Element not Found";
 }
 
-int insert (Table *ptab, int key, char *str) {
+int insert (Table *ptab, int key, char *str){
     int hashKey = getHashKey(key);
     Item *p = NULL;
     int n = 0;
@@ -236,7 +236,7 @@ int printTable(Table *ptab){
     return 1;
 }
 
-int delElem(Table *ptab, int key) {
+int delElem(Table *ptab, int key){
     int hashKey = getHashKey(key);
     Item *p = NULL;
     int n = 0;
