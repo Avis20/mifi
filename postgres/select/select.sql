@@ -22,6 +22,7 @@ WHERE order_position.product_id IS NULL;
 
 
 
+
 /*
 -------------------
 -- VI
