@@ -109,8 +109,8 @@ CREATE TABLE public."orders" (
 COMMENT ON COLUMN public."orders".id IS 'ID заказа';
 COMMENT ON COLUMN public."orders".customer_id IS 'ID покупателя';
 COMMENT ON COLUMN public."orders".datetime_registration IS 'дата и время оформления';
-COMMENT ON COLUMN public."orders".datetime_first_notify IS 'дата отправки первого оповещения';
 COMMENT ON COLUMN public."orders".datetime_payment IS 'дата и время оплаты';
+COMMENT ON COLUMN public."orders".datetime_first_notify IS 'дата отправки первого оповещения';
 COMMENT ON COLUMN public."orders".datetime_product_end IS 'крайний срок отпуска товара со склада';
 COMMENT ON COLUMN public."orders".count_products IS 'кол-во товаров';
 COMMENT ON COLUMN public."orders".payment_status IS 'отметка о продаже(отмене) покупки товара';
