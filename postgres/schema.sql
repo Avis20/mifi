@@ -146,11 +146,10 @@ FOR EACH ROW EXECUTE PROCEDURE orders_update_is_cancel_after_tr();
 -- drop table public."order_position";
 
 CREATE TABLE public."order_position" (
-  order_id INTEGER  NOT NULL,
+  order_id INTEGER REFERENCES public.orders(id) NOT NULL,
   product_id INTEGER REFERENCES public.products(id) NOT NULL,
   count_products INTEGER CHECK (count_products > 0),
-  FOREIGN KEY (order_id) REFERENCES public."orders"(id),
-  PRIMARY KEY(order_id)
+  PRIMARY KEY(order_id, product_id)
 );
 
 COMMENT ON COLUMN public."order_position".order_id IS 'ID заказа';
