@@ -1,4 +1,6 @@
 
+
+/*
 -------------------
 -- V
 -- Вывести товары которые никогда не покупались
@@ -19,6 +21,8 @@ LEFT JOIN orders ON orders.id = order_position.order_id AND orders.customer_id =
      ORDER BY count(order_position.product_id) DESC
      LIMIT 1)
 WHERE order_position.product_id IS NULL;
+*/
+
 
 
 
@@ -56,25 +60,28 @@ SELECT name,
        sum(order_position.count_products) AS sum_products
 FROM products
 JOIN order_position ON order_position.product_id = products.id
-WHERE id IN
-        (SELECT order_position.product_id
-         FROM order_position
-         JOIN orders ON orders.id = order_position.order_id
-         JOIN person_entity AS person ON person.customer_id = orders.customer_id
-         WHERE orders.is_cancel IS FALSE
-         GROUP BY order_position.product_id)
-    AND id IN
-        (SELECT order_position.product_id
-         FROM order_position
-         JOIN orders ON orders.id = order_position.order_id
-         JOIN legal_entity AS legal ON legal.customer_id = orders.customer_id
-         WHERE orders.is_cancel IS FALSE
-         GROUP BY order_position.product_id)
+WHERE id IN (
+        SELECT order_position.product_id
+        FROM order_position
+        JOIN orders ON orders.id = order_position.order_id
+        JOIN person_entity AS person ON person.customer_id = orders.customer_id
+        WHERE orders.is_cancel IS FALSE
+        GROUP BY order_position.product_id
+        INTERSECT 
+        SELECT order_position.product_id
+        FROM order_position
+        JOIN orders ON orders.id = order_position.order_id
+        JOIN legal_entity AS legal ON legal.customer_id = orders.customer_id
+        WHERE orders.is_cancel IS FALSE
+        GROUP BY order_position.product_id
+)
 GROUP BY products.name
 ORDER BY sum(order_position.count_products) DESC;
+
 */
 
 
+-- /*
 -------------------
 -- II
 -- Вывести рейтинг покупателей (отдельно физ и юр лиц) (в два столбца)
@@ -83,46 +90,29 @@ ORDER BY sum(order_position.count_products) DESC;
 -------------------
 
 
-/*
 -- 1) убрать отмененные заказы
 -- 2) сумма по оплаченным квитанциям
 -- 3) 
 
-select customer_id, order_id, count(id)
-from notify
-where quittance_id is null
-group by customer_id, order_id;
-
-
-
--- select customer_id
--- from notify
--- order by is_paid is true desc, count()
-
-
--- select orders.customer_id, sum(quittances.payment_amount)
--- from notify
--- left join quittances on quittances.id = notify.quittance_id
--- join orders on orders.id = notify.order_id
--- where orders.is_cancel is false
--- group by orders.customer_id
--- order by sum(quittances.payment_amount) desc, 
-
-
- -- draft
--- select
---        sum(cost),
---        COALESCE(legal.company_name, person.last_name || ' ' || person.first_name || ' ' || person.middle_name, 'unknown' ) AS name
--- from orders
--- left join person_entity AS person on person.customer_id = orders.customer_id
--- left join legal_entity as legal on legal.customer_id = orders.customer_id
--- where is_cancel is false
--- group by name, orders.customer_id
--- order by sum(cost) desc
-*/
-
-
-
+select
+    orders.customer_id,
+    sum(orders.cost),
+    COALESCE(legal.company_name, person.last_name || ' ' || person.first_name || ' ' || person.middle_name, 'unknown') AS name
+from orders
+left JOIN legal_entity AS legal ON legal.customer_id = orders.customer_id
+left JOIN person_entity AS person ON person.customer_id = orders.customer_id
+JOIN order_position ON order_position.order_id = orders.id
+group by orders.customer_id, name
+order by sum(orders.cost) desc, orders.customer_id = (
+    select orders.customer_id
+    from orders
+    join notify on notify.order_id = orders.id
+    where orders.is_cancel is false and notify.is_paid is true
+    group by orders.id
+    having count(*) <= 1
+    order by count(*)
+    limit 1
+) desc
 
 /*
 -------------------

@@ -134,14 +134,17 @@ INSERT INTO "orders" (customer_id, count_products, cost, is_cancel) VALUES (3, 1
 INSERT INTO "order_position" (order_id, product_id, count_products) VALUES (7, 3, 10);
 
 
--- Заказ 2-го покупателя - 15 ластиков по 1 руб. на 15 руб.
+-- Заказ 2-го покупателя - 20 ластиков по 1 руб. на 20 руб.
 INSERT INTO "orders" (customer_id, count_products, cost, is_cancel, datetime_registration)
-VALUES (2, 15, 15, FALSE, '2019-11-05'); -- order=8
-INSERT INTO "order_position" (order_id, product_id, count_products) VALUES (8, 2, 15);
-
+VALUES (2, 20, 20, FALSE, '2019-11-05'); -- order=8
+INSERT INTO "order_position" (order_id, product_id, count_products) VALUES (8, 2, 20);
 
 UPDATE "orders" set datetime_payment = '2019-11-10' where id = 8;
 
+-- Заказ 1-го покупателя - 25 ручек по 2 руб. на 50 руб.
+INSERT INTO "orders" (customer_id, count_products, cost, is_cancel, datetime_registration)
+VALUES (1, 25, 50, FALSE, '2019-11-05'); -- order=9
+INSERT INTO "order_position" (order_id, product_id, count_products) VALUES (9, 2, 25);
 
 
 /*
