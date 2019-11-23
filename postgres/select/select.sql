@@ -1,6 +1,6 @@
 
 
-/*
+
 -------------------
 -- V
 -- Вывести товары которые никогда не покупались
@@ -8,46 +8,37 @@
 -------------------
 
 
+
 SELECT name
 FROM products
 LEFT JOIN order_position ON order_position.product_id = products.id
-LEFT JOIN orders ON orders.id = order_position.order_id AND orders.customer_id =
-    (
+LEFT JOIN orders ON orders.id = order_position.order_id AND orders.customer_id = (
         SELECT orders.customer_id
             -- , count(order_position.product_id) AS count_products
      FROM order_position
      JOIN orders ON orders.id = order_position.order_id
      GROUP BY order_position.product_id, orders.customer_id
      ORDER BY count(order_position.product_id) DESC
-     LIMIT 1)
+     LIMIT 1
+)
 WHERE order_position.product_id IS NULL;
-*/
+
+Убрать limit
 
 
-
-
-
-/*
 -------------------
 -- VI
 -- Вывести заказы с самым долгим периодом оплаты
 -- по кол-ву дней в простое
 -------------------
 
-SELECT id, datetime_payment, datetime_registration, diff
-FROM (
-    SELECT id, datetime_payment, datetime_registration, (datetime_payment - datetime_registration) AS diff, (
-        CASE
-           WHEN (datetime_payment - datetime_registration) IS NULL THEN 0
-           ELSE 1
-       END
-   ) AS is_null
-    FROM orders
-) x
-ORDER BY is_null DESC, diff DESC
-*/
 
-/*
+SELECT id, datetime_payment, datetime_registration, (datetime_payment - datetime_registration) AS diff
+FROM orders
+ORDER BY (datetime_payment - datetime_registration) desc nulls last;
+
+
+
 -------------------
 -- III
 -- Рейтинг товаров которые популярны среди физ. и юр. лиц
@@ -55,6 +46,8 @@ ORDER BY is_null DESC, diff DESC
 -- 2) Пересечение по продуктов физ и юр лиц
 -------------------
 
+
+-- explain analyze
 
 SELECT name,
        sum(order_position.count_products) AS sum_products
@@ -67,7 +60,7 @@ WHERE id IN (
         JOIN person_entity AS person ON person.customer_id = orders.customer_id
         WHERE orders.is_cancel IS FALSE
         GROUP BY order_position.product_id
-        INTERSECT 
+        INTERSECT
         SELECT order_position.product_id
         FROM order_position
         JOIN orders ON orders.id = order_position.order_id
@@ -77,8 +70,6 @@ WHERE id IN (
 )
 GROUP BY products.name
 ORDER BY sum(order_position.count_products) DESC;
-
-*/
 
 
 -- /*
@@ -93,6 +84,8 @@ ORDER BY sum(order_position.count_products) DESC;
 -- 1) убрать отмененные заказы
 -- 2) сумма по оплаченным квитанциям
 -- 3) 
+
+
 
 select
     orders.customer_id,
@@ -114,12 +107,17 @@ order by sum(orders.cost) desc, orders.customer_id = (
     limit 1
 ) desc
 
-/*
+
+Убрать limit
+
+
 -------------------
 -- I
 -- Вывести номер заказа, наименование клиента, стоимость заказа
 -- где кол-во оповещений было больше 2
 -------------------
+
+-- explain analyze
 
 SELECT orders.id,
        COALESCE(legal.company_name, person.last_name || ' ' || person.first_name || ' ' || person.middle_name, 'unknown') AS name,
@@ -135,4 +133,3 @@ WHERE orders.id IN
          GROUP BY orders.id
          HAVING count(notify.id) > 1)
 GROUP BY orders.id, name
-*/
