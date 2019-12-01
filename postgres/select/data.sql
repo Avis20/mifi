@@ -18,7 +18,7 @@ INSERT INTO "customers" (date_registration) VALUES ('2019-10-19');
 INSERT INTO "person_entity" (customer_id, last_name, first_name, middle_name, date_birth, passport_data, address, phone)
 VALUES (lastval(), 'Morris', 'James', 'Saveliev', '1986-11-16', '894894896', '4721 Masonic Drive Terry, MT 59349', '489-189-7894');
 
--- юр. лицо 1
+-- юр. лицо 3
 INSERT INTO "customers" (date_registration) VALUES ('2019-11-17');
 insert into "legal_entity" ( customer_id, company_name, address, phone, license_number, bank_details, company_category )
 values (lastval(), 'Baker', '922 Glen Street Bowling Green, KY 42101', '270-392-2311','403-66-XXXX', 'Prahject Planner', 'Business');
