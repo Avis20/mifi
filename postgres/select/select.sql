@@ -1,5 +1,5 @@
 
-
+/*
 -------------------
 -- V
 -- Вывести товары которые никогда не покупались
@@ -22,13 +22,10 @@ where id not in (
         ) f
     )
 )
+*/
 
 
-
-
-
-
--- /*
+/*
 -------------------
 -- II
 -- Вывести рейтинг покупателей (отдельно физ и юр лиц) (в два столбца)
@@ -40,7 +37,6 @@ where id not in (
 -- 1) убрать отмененные заказы
 -- 2) сумма по оплаченным квитанциям
 -- 3) 
-
 
 
 select
@@ -63,14 +59,10 @@ order by sum(orders.cost) desc, orders.customer_id = (
     ) x 
     where row_number = 1
 ) desc
+*/
 
 
 -- Убрать limit
-
-
-
-
-
 /*
 SELECT name
 FROM products
@@ -132,6 +124,8 @@ WHERE id IN (
 )
 GROUP BY products.name
 ORDER BY sum(order_position.count_products) DESC;
+
+
 */
 
 
@@ -149,11 +143,43 @@ FROM orders
 JOIN customers ON customers.id = orders.customer_id
 LEFT JOIN person_entity AS person ON person.customer_id = orders.customer_id
 LEFT JOIN legal_entity AS legal ON legal.customer_id = orders.customer_id
-WHERE orders.id IN
-        ( SELECT orders.id
-         FROM orders
-         JOIN notify ON notify.order_id = orders.id
-         GROUP BY orders.id
-         HAVING count(notify.id) > 1)
+WHERE orders.id IN (
+        SELECT orders.id
+        FROM orders
+        JOIN notify ON notify.order_id = orders.id
+        GROUP BY orders.id
+        HAVING count(notify.id) > 1)
 GROUP BY orders.id, name
 */
+
+
+explain (analyse, buffers) 
+    SELECT orders.id,
+           COALESCE(legal.company_name, person.last_name || ' ' || person.first_name || ' ' || person.middle_name, 'unknown') AS name,
+           orders.cost
+    FROM orders
+    JOIN customers ON customers.id = orders.customer_id
+    JOIN notify ON notify.order_id = orders.id
+    LEFT JOIN person_entity AS person ON person.customer_id = orders.customer_id
+    LEFT JOIN legal_entity AS legal ON legal.customer_id = orders.customer_id
+    GROUP BY orders.id, name
+    HAVING count(notify.id) > 1
+
+
+
+
+explain (analyse, buffers) 
+SELECT orders.id,
+       COALESCE(legal.company_name, person.last_name || ' ' || person.first_name || ' ' || person.middle_name, 'unknown') AS name,
+       orders.cost
+FROM orders
+JOIN customers ON customers.id = orders.customer_id
+LEFT JOIN person_entity AS person ON person.customer_id = orders.customer_id
+LEFT JOIN legal_entity AS legal ON legal.customer_id = orders.customer_id
+WHERE orders.id IN (
+        SELECT orders.id
+        FROM orders
+        JOIN notify ON notify.order_id = orders.id
+        GROUP BY orders.id
+        HAVING count(notify.id) > 1)
+GROUP BY orders.id, name

@@ -25,6 +25,12 @@ INSERT INTO "customers" (id, date_registration) VALUES (2, '2019-10-19');
 INSERT INTO "person_entity" (customer_id, last_name, first_name, middle_name, date_birth, passport_data, address, phone)
 VALUES (2, 'Morris', 'James', 'Saveliev', '1986-11-16', '894894896', '4721 Masonic Drive Terry, MT 59349', '489-189-7894');
 
+-- Создаем 2 покупателя
+INSERT INTO "customers" (id, date_registration) VALUES (4, '2019-12-09');
+INSERT INTO "person_entity" (customer_id, last_name, first_name, middle_name, date_birth, passport_data, address, phone)
+VALUES (4, 'AAAAAAAAAAAAA', 'BBBBBB', 'CCCCCC', '1996-10-12', 'dsa8202231098', 'Woodlawn Drive New Berlin, WI 53151', '414-558-5587');
+
+
 ---------------------
 -- Заказы 1-го покупателя
 ---------------------
