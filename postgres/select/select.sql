@@ -110,7 +110,7 @@ ORDER BY (datetime_payment - datetime_registration) desc nulls last;
 -- 2) Пересечение по продуктов физ и юр лиц
 -------------------
 
-
+explain analyse
 SELECT name,
        sum(order_position.count_products) AS sum_products
 FROM products
