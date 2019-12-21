@@ -59,6 +59,7 @@ order by sum(orders.cost) desc, orders.customer_id = (
     ) x 
     where row_number = 1
 ) desc
+
 */
 
 
@@ -154,16 +155,16 @@ GROUP BY orders.id, name
 
 
 explain (analyse, buffers) 
-    SELECT orders.id,
-           COALESCE(legal.company_name, person.last_name || ' ' || person.first_name || ' ' || person.middle_name, 'unknown') AS name,
-           orders.cost
-    FROM orders
-    JOIN customers ON customers.id = orders.customer_id
-    JOIN notify ON notify.order_id = orders.id
-    LEFT JOIN person_entity AS person ON person.customer_id = orders.customer_id
-    LEFT JOIN legal_entity AS legal ON legal.customer_id = orders.customer_id
-    GROUP BY orders.id, name
-    HAVING count(notify.id) > 1
+SELECT orders.id,
+       COALESCE(legal.company_name, person.last_name || ' ' || person.first_name || ' ' || person.middle_name, 'unknown') AS name,
+       orders.cost
+FROM orders
+JOIN customers ON customers.id = orders.customer_id
+JOIN notify ON notify.order_id = orders.id
+LEFT JOIN person_entity AS person ON person.customer_id = orders.customer_id
+LEFT JOIN legal_entity AS legal ON legal.customer_id = orders.customer_id
+GROUP BY orders.id, name
+HAVING count(notify.id) > 1
 
 
 
